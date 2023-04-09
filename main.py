@@ -1,8 +1,6 @@
 import hashlib
 import create_wordlists
 
-input_string = ""
-
 def hash_string(input_string, algorithm):
     if algorithm.lower() == 'md5':
         hasher = hashlib.md5()
@@ -18,7 +16,7 @@ def hash_string(input_string, algorithm):
         raise ValueError('Unsupported algorithm')
 
     hasher.update(input_string.encode('utf-8'))
-    return hasher.hexdigest()
+    return f"Hash using {algorithm.upper()}: {hasher.hexdigest()}"
 
 
 def get_hash_algorithm():
@@ -71,11 +69,13 @@ def brute_force(file_name, hash_to_find, hash_algorithm):
 
             hash_found = hash_string(line, hash_algorithm)
             if compare_hashes(hash_to_find, hash_found):
-                return line
+                return f"\nString found: {line}\n"
         print("Hash not found in " + file_name)
 
-while True:
-    print("Lucas' Hash Cracker")
+
+running = True
+while running:
+    print("-=-=Lucas' Hash Cracker=-=-")
     choice = 0
     while True:
         print("Select an option: ")
@@ -83,22 +83,22 @@ while True:
         [1] Hash String
         [2] Crack Hash
         [3] Create wordlist
+        [4] Exit
         """)
         choice = int(input("Please enter a choice: "))
-        if choice < 1 or choice > 3:
+        if choice < 1 or choice > 4:
             print("Try again")
         else:
             break
     match choice:
         case 1:
             print(hash_string(input("Enter a string: "), get_hash_algorithm()))
-            break
         case 2:
             wordlist = input("Please enter a wordlist: ")
             hash_to_crack = input("Enter a hash: ")
             print(brute_force(wordlist, hash_to_crack, get_hash_algorithm()))
-            break
         case 3:
             create_wordlists.run()
-            break
+        case 4:
+            running = False
 
